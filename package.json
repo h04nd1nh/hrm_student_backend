@@ -1,0 +1,19 @@
+{
+  "name": "hrm_student_backend",
+  "version": "1.0.0",
+  "description": "HRM Student backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h04nd1nh/Student-HRM-Backend.git"
+  },
+  "author": "h04nd1nh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/h04nd1nh/Student-HRM-Backend/issues"
+  },
+  "homepage": "https://github.com/h04nd1nh/Student-HRM-Backend#readme"
+}
