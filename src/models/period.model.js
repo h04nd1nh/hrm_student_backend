@@ -1,31 +1,65 @@
 module.exports = (sequelize, Sequelize) => {
-    const Period = sequelize.define(
+  const Period = sequelize.define(
       "period",
       {
-        id: {
-          type: Sequelize.INTEGER,
-          primaryKey: true,
-          autoIncrement: true,
-        },
-        period_name: {
-          type: Sequelize.STRING,
-          unique: true,
-          allowNull: false
-        },
-        start_time: { // Trường lưu giờ bắt đầu
-            type: Sequelize.TIME,
-            allowNull: false,
-        },
-        end_time: { // Trường lưu giờ kết thúc
-            type: Sequelize.TIME,
-            allowNull: true, // Có thể cho phép null nếu không cần
-        },
+          id: {
+              type: Sequelize.INTEGER,
+              primaryKey: true,
+              autoIncrement: true,
+          },
+          period_name: {
+              type: Sequelize.STRING,
+              unique: true,
+              allowNull: false,
+          },
+          start_time: {
+              type: Sequelize.TIME,
+              allowNull: false,
+          },
+          end_time: {
+              type: Sequelize.TIME,
+              allowNull: true,
+          },
       },
       {
-        tableName: "period",
-        timestamps: false, // Tắt auto thêm createdAt, updatedAt
+          tableName: "period",
+          timestamps: false, // Không thêm createdAt, updatedAt
       }
-    );
-    return Period;
+  );
+
+  // Static method để lấy period_id của khoảng thời gian hiện tại
+  Period.getCurrentPeriod = async function () {
+      try {
+          const currentTime = new Date(); // Lấy thời gian hiện tại
+
+          // Lấy tất cả các period
+          const periods = await this.findAll();
+
+          for (const period of periods) {
+              // Tạo startTime và endTime từ ngày hiện tại
+              const startTime = new Date();
+              const endTime = new Date();
+
+              // Gắn giờ, phút, giây vào startTime
+              const [startHours, startMinutes, startSeconds] = period.start_time.split(":").map(Number);
+              startTime.setHours(startHours, startMinutes, startSeconds || 0);
+
+              // Gắn giờ, phút, giây vào endTime
+              const [endHours, endMinutes, endSeconds] = period.end_time.split(":").map(Number);
+              endTime.setHours(endHours, endMinutes, endSeconds || 0);
+
+              // Kiểm tra currentTime có nằm trong khoảng thời gian không
+              if (currentTime >= startTime && currentTime <= endTime) {
+                  return period.id; // Trả về period_id
+              }
+          }
+
+          return null; // Không có period nào phù hợp
+      } catch (error) {
+          console.error("Error in getCurrentPeriod:", error);
+          throw error;
+      }
   };
-  
+
+  return Period;
+};

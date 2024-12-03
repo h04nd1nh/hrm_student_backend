@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
           primaryKey: true,
           autoIncrement: true,
         },
-        period_name: {
+        timetable_id: {
           type: Sequelize.STRING,
           unique: true,
           allowNull: false

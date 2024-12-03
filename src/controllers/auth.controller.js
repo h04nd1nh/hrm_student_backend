@@ -90,17 +90,11 @@ exports.signin = (req, res) => {
 
       if (!passwordIsValid) {
         return res.status(401).send({
-          accessToken: null,
+          "access_token": null,
           "message": "Tài khoản hoặc mật khẩu không đúng"
         });
       }
       
-      if (!user.active) {
-        return res.status(401).send({
-          accessToken: null,
-          "message": "Tài khoản không tồn tại, vui lòng thử lại"
-        });
-      }
 
       const token = jwt.sign({ id: user.id },
                               config.secret,
@@ -122,7 +116,8 @@ exports.signin = (req, res) => {
             phone_number: user.phone_number,
             avatar: user.avatar,
             user_type: user.user_type,
-            access_token: token
+            access_token: token,
+            role: user.user_role,
           }
       });
     })

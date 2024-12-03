@@ -45,6 +45,13 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to HRM Student application." });
 });
 
+// routes
+require("./src/routes/auth.routes")(app);
+require("./src/routes/timetable.routes")(app);
+require("./src/routes/timetable_teacher.routes")(app);
+require("./src/routes/checkin_session.routes")(app);
+
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

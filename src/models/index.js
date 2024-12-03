@@ -25,6 +25,10 @@ db.sequelize = sequelize;
 
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
-
+db.checkinSession = require("../models/checkin_session.model.js")(sequelize, Sequelize);
+db.period = require("../models/period.model.js")(sequelize, Sequelize);
+db.room = require("../models/room.model.js")(sequelize, Sequelize);
+db.timeTable = require("../models/timetable.model.js")(sequelize, Sequelize);
+db.timeTableTeacher = require("../models/timetable_teacher.model.js")(sequelize, Sequelize);
 
 module.exports = db;
