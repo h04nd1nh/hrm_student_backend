@@ -10,10 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         user_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
-          references: {
-            model: 'users', // Tên bảng liên kết
-            key: 'id',
-          },
         },
         label: {
           type: Sequelize.STRING,

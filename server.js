@@ -1,9 +1,9 @@
-require('@tensorflow/tfjs-node'); 
 const express = require("express");
 const cors = require("cors");
 const i18n = require("i18n");
 var url = require("url");
 var path = require("path");
+const { loadModels  } = require("./src/controllers/face_descriptor.controller");
 global.dummy = 1;
 
 var signalObject = {};
@@ -53,7 +53,7 @@ require("./src/routes/timetable_teacher.routes")(app);
 require("./src/routes/checkin_session.routes")(app);
 require("./src/routes/face_descriptor.routes")(app);
 
-
+loadModels();
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
