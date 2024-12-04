@@ -93,11 +93,12 @@ exports.checkin = async (req, res) => {
         const userId = req.userId;
         const { session_id } = req.params;
 
-        const checkinSession = await checkinSession.findOne({ where: {
+        const checkin = await checkinSession.findOne({ where: {
             id: session_id,
         } });
         
-        if (!checkinSession) {
+        
+        if (!checkin) {
             return res.status(404).json({
                 success: false,
                 message: "Không tìm thấy phiên điểm danh",
@@ -105,7 +106,7 @@ exports.checkin = async (req, res) => {
         }
 
         // Lấy giá trị start_time từ cơ sở dữ liệu và thời điểm hiện tại
-        const startTime = moment(checkinSession.start_time, "HH:mm:ss"); // Chuyển đổi sang moment
+        const startTime = moment(checkin.start_time, "HH:mm:ss"); // Chuyển đổi sang moment
         const currentTime = moment(); // Thời điểm hiện tại
 
         // Tính toán khoảng cách thời gian (theo phút)
@@ -124,7 +125,7 @@ exports.checkin = async (req, res) => {
             {
                 where: {
                     student_id: userId, // User ID của sinh viên
-                    time_table_teacher_id: checkinSession.timetable_id, // ID trong bảng timetable
+                    time_table_teacher_id: checkin.timetable_id, // ID trong bảng timetable
                 },
             }
         );

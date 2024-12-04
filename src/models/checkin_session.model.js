@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
           autoIncrement: true,
         },
         timetable_id: {
-          type: Sequelize.STRING,
+          type: Sequelize.INTEGER,
           unique: true,
           allowNull: false
         },

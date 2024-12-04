@@ -4,6 +4,7 @@ const moment = require("moment");
 const User = db.user;
 const { Op, transaction } = db.Sequelize;
 const timeTableTeacher = db.timeTableTeacher;
+const timeTable = db.timeTable;
 const period = db.period;
 
 exports.get_time_table_teacher = async (req, res) => {
@@ -117,6 +118,109 @@ exports.get_current_time_table = async (req, res) => {
         });
     }
 };
+
+exports.add_time_table_teacher = async (req, res) => {
+    try {
+        const userId = req.userId; // Lấy userId từ token hoặc session
+        const user = await User.findOne({
+            where: { id: userId },
+        });
+
+        const { 
+            period_id, 
+            period_name,
+            title, 
+            room_id, 
+            room_name, 
+            date 
+        } = req.body;
+
+        // Kiểm tra nếu user không phải giáo viên
+        if (!user || user.user_role !== "teacher") {
+            return res.status(403).json({
+                success: false,
+                message: "Bạn không có quyền tạo thời khóa biểu",
+            });
+        }
+
+        // Chuyển đổi date từ dd-mm-yyyy sang yyyy-mm-dd
+        const [day, month, year] = date.split("-");
+        const formattedDate = `${year}-${month}-${day}`;
+
+        // Kiểm tra xem thời khóa biểu của giáo viên đã tồn tại hay chưa
+        const existingTimetable = await timeTableTeacher.findOne({
+            where: {
+                teacher_id: userId, // ID của giáo viên
+                period_id: period_id,
+                date: {
+                    [Op.eq]: formattedDate, // So sánh ngày bằng với formattedDate
+                },
+            },
+        });
+
+        if (existingTimetable) {
+            return res.status(400).json({
+                success: false,
+                message: "Thời khóa biểu đã tồn tại trong khoảng thời gian này",
+            });
+        }
+
+        // Tạo mới thời khóa biểu cho giáo viên
+        const newTimetableTeacher = await timeTableTeacher.create({
+            teacher_id: userId,
+            teacher_name: user.fullname,
+            title,
+            period_id,
+            period_name,
+            room_id,
+            room_name,
+            date: formattedDate, // Lưu date đã được định dạng
+        });
+
+        // Lấy danh sách tất cả học sinh
+        const students = await User.findAll({
+            where: { user_role: "student" },
+            attributes: ["id", "fullname"], // Chỉ lấy id và name
+        });
+
+        if (students.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: "Tạo thời khóa biểu thành công cho giáo viên, nhưng không có sinh viên nào để tạo thời khóa biểu",
+                data: newTimetableTeacher,
+            });
+        }
+
+        // Tạo thời khóa biểu cho từng học sinh
+        const studentTimeTables = students.map(student => ({
+            student_id: student.id,
+            time_table_teacher_id: newTimetableTeacher.id, // ID thời khóa biểu giáo viên
+            teacher_name: user.fullname,
+            title,
+            period_id,
+            period_name,
+            room_id,
+            room_name,
+            date: formattedDate,
+        }));
+
+        // Bulk create thời khóa biểu cho học sinh
+        await timeTable.bulkCreate(studentTimeTables);
+
+        return res.status(201).json({
+            success: true,
+            message: "Tạo thời khóa biểu thành công cho giáo viên và tất cả học sinh",
+        });
+    } catch (error) {
+        console.error("Error creating timetable:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Lỗi máy chủ",
+        });
+    }
+};
+
+
 
 
 

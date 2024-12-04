@@ -1,3 +1,4 @@
+require('@tensorflow/tfjs-node'); 
 const express = require("express");
 const cors = require("cors");
 const i18n = require("i18n");
@@ -50,6 +51,7 @@ require("./src/routes/auth.routes")(app);
 require("./src/routes/timetable.routes")(app);
 require("./src/routes/timetable_teacher.routes")(app);
 require("./src/routes/checkin_session.routes")(app);
+require("./src/routes/face_descriptor.routes")(app);
 
 
 // set port, listen for requests

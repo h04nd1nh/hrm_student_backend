@@ -15,5 +15,5 @@ module.exports = function(app) {
 
   app.get("/hrmstudent/api/v1/student/timetable_teacher", [authJwt.verifyToken],controller.get_time_table_teacher);
   app.get("/hrmstudent/api/v1/student/current_timetable_teacher", [authJwt.verifyToken],controller.get_current_time_table);
-
+  app.post("/hrmstudent/api/v1/student/timetable_teacher", [authJwt.verifyToken],controller.add_time_table_teacher);
 };
