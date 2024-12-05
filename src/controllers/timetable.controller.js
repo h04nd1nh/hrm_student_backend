@@ -84,7 +84,7 @@ exports.get_current_time_table = async (req, res) => {
     try {
         const userId = req.userId;
         const currentPeriodId = await period.getCurrentPeriod();
-        console.log(currentPeriodId);
+
         if (!currentPeriodId) {
             return res.status(404).json({
                 success: false,
@@ -92,11 +92,9 @@ exports.get_current_time_table = async (req, res) => {
             });
         }
 
-        // Lấy ngày hiện tại
-        const currentDate = moment().startOf("day").toDate();
 
         // Tìm timetable với period_id và date
-        const currentTimetable = await timeTable.getCurrentClass(currentPeriodId, currentDate, userId);
+        const currentTimetable = await timeTable.getCurrentClass(currentPeriodId, userId);
 
         if (!currentTimetable) {
             return res.status(200).json({

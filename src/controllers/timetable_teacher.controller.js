@@ -93,11 +93,8 @@ exports.get_current_time_table = async (req, res) => {
             });
         }
 
-        // Lấy ngày hiện tại
-        const currentDate = moment().startOf("day").toDate();
-
         // Tìm timetable với period_id và date
-        const currentTimetable = await timeTableTeacher.getCurrentClass(currentPeriodId, currentDate, userId);
+        const currentTimetable = await timeTableTeacher.getCurrentClass(currentPeriodId, userId);
 
         if (!currentTimetable) {
             return res.status(200).json({

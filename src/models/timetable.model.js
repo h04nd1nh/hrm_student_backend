@@ -54,23 +54,19 @@ module.exports = (sequelize, Sequelize) => {
   );
 
   // Static method
-  TimeTable.getCurrentClass = async function (period_id, currentDate, studentId) {
+  TimeTable.getCurrentClass = async function (periodId, studentId) {
       try {
           // Format ngày thành chuỗi 'YYYY-MM-DD'
-          const formattedDate = currentDate.toISOString().split("T")[0];
-
-          // Tìm lớp học theo period_id và ngày
-          const result = await this.findOne({
-              where: {
-                  student_id: studentId,
-                  period_id: period_id,
-                  date: sequelize.where(
-                      sequelize.fn("DATE", sequelize.col("date")),
-                      "=",
-                      formattedDate // So sánh ngày
-                  ),
-              },
-          });
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().split("T")[0];
+            // Tìm lớp học theo period_id và ngày hôm nay
+            const result = await this.findOne({
+                where: {
+                student_id: studentId,
+                period_id: periodId,
+                date: sequelize.where(sequelize.fn("DATE", sequelize.col("date")), "=", formattedDate),
+                },
+            });
 
           return result;
       } catch (error) {

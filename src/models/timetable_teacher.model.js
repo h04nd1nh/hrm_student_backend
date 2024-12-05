@@ -46,16 +46,18 @@ module.exports = (sequelize, Sequelize) => {
     );
 
     // Static method
-    TimeTableTeacher.getCurrentClass = async function (period_id, currentDate, teacherId) {
+    TimeTableTeacher.getCurrentClass = async function (periodId, teacherId) {
       try {
           // Format ngày thành chuỗi 'YYYY-MM-DD'
-          const formattedDate = currentDate.toISOString().split("T")[0];
+                    // Format ngày thành chuỗi 'YYYY-MM-DD'
+                    const currentDate = new Date();
+                    const formattedDate = currentDate.toISOString().split("T")[0];
 
           // Tìm lớp học theo period_id và ngày
           const result = await this.findOne({
               where: {
                   teacher_id: teacherId,
-                  period_id: period_id,
+                  period_id: periodId,
                   date: sequelize.where(
                       sequelize.fn("DATE", sequelize.col("date")),
                       "=",
