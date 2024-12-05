@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
     try {
       // Lấy thời gian hiện tại theo múi giờ Hà Nội
       const currentTime = moment().tz("Asia/Ho_Chi_Minh");
-      console.log("Current Time:", currentTime.format("YYYY-MM-DD HH:mm:ss"));
+      
   
       // Lấy tất cả các period
       const periods = await this.findAll();
@@ -54,9 +54,7 @@ module.exports = (sequelize, Sequelize) => {
           minute: endMinutes,
           second: endSeconds || 0,
         });
-  
-        console.log("Start Time:", startTime.format("YYYY-MM-DD HH:mm:ss"));
-        console.log("End Time:", endTime.format("YYYY-MM-DD HH:mm:ss"));
+
   
         // Kiểm tra currentTime có nằm trong khoảng thời gian không
         if (currentTime.isBetween(startTime, endTime, null, '[]')) {
