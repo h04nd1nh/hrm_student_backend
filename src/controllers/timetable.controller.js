@@ -84,7 +84,7 @@ exports.get_current_time_table = async (req, res) => {
     try {
         const userId = req.userId;
         const currentPeriodId = await period.getCurrentPeriod();
-
+        console.log(currentPeriodId);
         if (!currentPeriodId) {
             return res.status(404).json({
                 success: false,
