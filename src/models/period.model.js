@@ -30,8 +30,8 @@ module.exports = (sequelize, Sequelize) => {
   // Static method để lấy period_id của khoảng thời gian hiện tại
   Period.getCurrentPeriod = async function () {
       try {
-          const currentTime = new Date(); // Lấy thời gian hiện tại
-
+          const currentTime = new Date(new Date().getTime() + 7 * 60 * 60 * 1000); // Lấy thời gian hiện tại
+            console.log(currentTime);
           // Lấy tất cả các period
           const periods = await this.findAll();
 

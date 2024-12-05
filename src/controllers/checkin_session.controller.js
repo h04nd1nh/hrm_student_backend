@@ -65,11 +65,11 @@ exports.get_checkin = async (req, res) => {
         const userId = req.userId;
         const { time_table_teacher_id } = req.query;
 
-        const checkinSession = await checkinSession.findOne({ where: {
+        const checkin = await checkinSession.findOne({ where: {
             timetable_id: time_table_teacher_id,
         }});
         
-        if (!checkinSession) {
+        if (!checkin) {
             return res.status(404).json({
                 success: false,
                 message: "Chưa có phiên điểm danh của lớp học này",
@@ -77,10 +77,11 @@ exports.get_checkin = async (req, res) => {
         } else {
             return res.status(200).json({
                 success: true,
-                session: checkinSession,
+                session: checkin,
             });
         }
     } catch (error) {
+        console.log(error.message);
         return res.status(500).json({
             success: false,
             message: "Lỗi máy chủ" 
