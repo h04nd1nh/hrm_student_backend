@@ -30,8 +30,8 @@ exports.create_checkin_session = async (req, res) => {
 
         // Kiểm tra thời gian hiện tại có nằm trong khoảng period.start_time và period.end_time không
         const currentTime = moment(); // Thời gian hiện tại
-        const startTime = moment(period.start_time); // Thời gian bắt đầu của period
-        const endTime = moment(period.end_time); // Thời gian kết thúc của period
+        const startTime = moment(period.start_time, "HH:mm:ss"); // Thời gian bắt đầu
+        const endTime = moment(period.end_time, "HH:mm:ss"); // Thời gian kết thúc
 
         // Kiểm tra điều kiện
         if (currentDate.isSame(timeTableDate) && currentTime.isBetween(startTime, endTime, null, '[]')) {
