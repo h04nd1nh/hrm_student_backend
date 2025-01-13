@@ -15,9 +15,13 @@ module.exports = (sequelize, Sequelize) => {
           type: Sequelize.STRING,
           allowNull: true
         },
-        title: {
-            type: Sequelize.STRING,
-            allowNull: true
+        subject_id: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
+        subject_name: {
+          type: Sequelize.STRING,
+          allowNull: true,
         },
         period_id: {
             type: Sequelize.INTEGER,
@@ -51,6 +55,7 @@ module.exports = (sequelize, Sequelize) => {
           // Format ngày thành chuỗi 'YYYY-MM-DD'
                     // Format ngày thành chuỗi 'YYYY-MM-DD'
                     const currentDate = new Date();
+                    currentDate.setHours(currentDate.getHours() + 7); // Adjust for timezone if necessary
                     const formattedDate = currentDate.toISOString().split("T")[0];
 
           // Tìm lớp học theo period_id và ngày

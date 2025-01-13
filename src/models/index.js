@@ -31,5 +31,17 @@ db.room = require("../models/room.model.js")(sequelize, Sequelize);
 db.timeTable = require("../models/timetable.model.js")(sequelize, Sequelize);
 db.timeTableTeacher = require("../models/timetable_teacher.model.js")(sequelize, Sequelize);
 db.faceDescriptor = require("../models/face_descriptor.model.js")(sequelize, Sequelize);
+db.subject = require("../models/subject.model.js")(sequelize, Sequelize);
+
+
+db.user.hasMany(db.timeTable, {
+  foreignKey: 'student_id', // Trường khóa ngoại trong bảng timeTable
+  as: 'timeTables', // Alias cho quan hệ (tùy chọn)
+});
+
+db.timeTable.belongsTo(db.user, {
+  foreignKey: 'student_id', // Trường khóa ngoại trỏ đến id trong bảng user
+  as: 'user', // Alias cho quan hệ (tùy chọn)
+});
 
 module.exports = db;

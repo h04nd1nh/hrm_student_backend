@@ -126,6 +126,8 @@ exports.add_time_table_teacher = async (req, res) => {
         const { 
             period_id, 
             period_name,
+            subject_id,
+            subject_name,
             title, 
             room_id, 
             room_name, 
@@ -166,7 +168,8 @@ exports.add_time_table_teacher = async (req, res) => {
         const newTimetableTeacher = await timeTableTeacher.create({
             teacher_id: userId,
             teacher_name: user.fullname,
-            title,
+            subject_id,
+            subject_name,
             period_id,
             period_name,
             room_id,
@@ -193,7 +196,8 @@ exports.add_time_table_teacher = async (req, res) => {
             student_id: student.id,
             time_table_teacher_id: newTimetableTeacher.id, // ID thời khóa biểu giáo viên
             teacher_name: user.fullname,
-            title,
+            subject_id,
+            subject_name,
             period_id,
             period_name,
             room_id,

@@ -134,7 +134,7 @@ exports.face_identify = async (req, res) => {
     const distance = getEuclideanDistance(uploadedDescriptor, storedDescriptor);
 
     // Ngưỡng để xác định hai khuôn mặt là giống nhau
-    const threshold = 0.6;
+    const threshold = 0.9; // Giảm ngưỡng để tăng độ chính xác
 
     // Kiểm tra xem khoảng cách có nằm trong ngưỡng
     if (distance < threshold) {

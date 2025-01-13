@@ -7,6 +7,7 @@ const timeTableTeacher = db.timeTableTeacher;
 const timeTable = db.timeTable;
 const checkinSession = db.checkinSession;
 const Period = db.period;  // Đổi tên biến `period` thành `Period` ở đây
+const Room = db.room;  // Đổi tên biến `room` thành `Room` ở đây
 
 exports.create_checkin_session = async (req, res) => {
     try {
@@ -75,11 +76,64 @@ exports.get_checkin = async (req, res) => {
                 message: "Chưa có phiên điểm danh của lớp học này",
             });
         } else {
+            const timeTabledata = await timeTable.findOne({ where: { id: checkin.timetable_id } });
+            const room = await Room.findOne({ where: { id: timeTabledata.room_id } });
+            console.log(room);
             return res.status(200).json({
                 success: true,
                 session: checkin,
+                room_ssid: room.room_wifi_ssid
             });
         }
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Lỗi máy chủ" 
+        });
+    }
+};
+
+
+exports.get_teacher_checkin = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { time_table_teacher_id } = req.query;
+
+        const checkin = await checkinSession.findOne({ where: {
+            timetable_id: time_table_teacher_id,
+        }});
+        
+        if (!checkin) {
+            return res.status(404).json({
+                success: false,
+                message: "Chưa có phiên điểm danh của lớp học này",
+            });
+        } else {
+            const students = await timeTable.findAll({
+                where: {
+                  time_table_teacher_id: time_table_teacher_id,
+                },
+                include: [
+                  {
+                    model: User,
+                    as: 'user', // Thêm alias vào đây
+                    attributes: ['id', 'fullname', 'email'],
+                  },
+                ],
+              });
+              
+              const checkedInStudents = students.filter(student => student.is_checkin);
+              const notCheckedInStudents = students.filter(student => !student.is_checkin);
+              
+              return res.status(200).json({
+                success: true,
+                session: checkin,
+                checked_in_students: checkedInStudents.map(student => student.user), // Chỉ định alias 'user'
+                not_checked_in_students: notCheckedInStudents.map(student => student.user), // Chỉ định alias 'user'
+              });
+        }
+    
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({
